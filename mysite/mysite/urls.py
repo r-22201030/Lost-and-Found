@@ -16,7 +16,52 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from. import views
+# apps/urls.py
+# mysite/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+
+from django.contrib import admin
+from django.urls import path, include
+
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('apps.urls')),
 ]
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('apps.urls')),
+]
+from django.contrib import admin
+from django.urls import path
+from apps import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.home, name='home'),
+    path('signup/', views.signup_page, name='signup'),
+    path('login/', views.login_page, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+]
+
+from django.urls import path
+from apps import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.home_page, name='home'),       # <-- home page
+    path('signup/', views.signup_page, name='signup'),
+    path('login/', views.login_page, name='login'),
+    path('logout/', views.logout_page, name='logout'),
+    path('about/', views.about_page, name='about'),
+    path('contact/', views.contact_page, name='contact'),
+]
+

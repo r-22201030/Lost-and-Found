@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+  <div class="card p-4 shadow-sm" style="width: 100%; max-width: 400px; border-radius: 15px;">
+    <h3 class="card-title text-center mb-4">Sign Up</h3>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" name="username" id="username" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" id="password" required>
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="terms" id="terms" required>
+        <label class="form-check-label" for="terms">
+          I agree with all the terms and conditions
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+    </form>
+
+    {% if error %}
+      <p class="text-danger mt-2">{{ error }}</p>
+    {% endif %}
+
+    <p class="text-center mt-3">
+      Already have an account? <a href="{% url 'login' %}">Log in</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

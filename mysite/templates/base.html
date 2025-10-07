@@ -10,21 +10,84 @@
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <!-- ✅ Navbar Start -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">MySite</a>
-      <div class="ms-auto">
-        {% if user.is_authenticated %}
-          <span class="text-light me-2">Hi, {{ user.username }}!</span>
-          <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
-        {% else %}
-          <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">Login</a>
-          <a href="{% url 'signup' %}" class="btn btn-warning btn-sm">Sign Up</a>
-        {% endif %}
+      <a class="navbar-brand fw-bold" href="{% url 'home' %}">Lost & Found</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav gap-2">
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">Home</a>
+          </li>
+
+          <!-- ✅ Items Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="itemsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Items
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="itemsDropdown">
+              <li><h6 class="dropdown-header">Lost Items</h6></li>
+              {% for item in lost_items %}
+                <li>
+                  <a class="dropdown-item" href="{% url 'item_detail' 'lost' item.id %}">{{ item.name }}</a>
+                </li>
+              {% empty %}
+                <li><span class="dropdown-item text-muted">No lost items</span></li>
+              {% endfor %}
+
+              <li><hr class="dropdown-divider"></li>
+              <li><h6 class="dropdown-header">Found Items</h6></li>
+              {% for item in found_items %}
+                <li>
+                  <a class="dropdown-item" href="{% url 'item_detail' 'found' item.id %}">{{ item.name }}</a>
+                </li>
+              {% empty %}
+                <li><span class="dropdown-item text-muted">No found items</span></li>
+              {% endfor %}
+            </ul>
+          </li>
+
+          <!-- ✅ Report Item (শুধু login করা ইউজারের জন্য) -->
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'report' %}">Report Item</a>
+            </li>
+          {% endif %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about' %}">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+          </li>
+
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <span class="nav-link text-success">Hi, {{ user.username }}!</span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+          {% endif %}
+        </ul>
       </div>
     </div>
   </nav>
+  <!-- ✅ Navbar End -->
 
   <!-- Page content -->
   <div class="container mt-5">
@@ -34,7 +97,7 @@
   <!-- Footer -->
   <footer class="bg-light text-center text-muted py-3 mt-5">
     <div class="container">
-      <p class="mb-1">&copy; 2025 MySite. All Rights Reserved.</p>
+      <p class="mb-1">&copy; 2025 Lost & Found. All Rights Reserved.</p>
       <a href="{% url 'about' %}" class="mx-2">About</a> |
       <a href="{% url 'contact' %}" class="mx-2">Contact</a>
     </div>

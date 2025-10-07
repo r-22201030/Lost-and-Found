@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Item Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 border-0 rounded-4">
+
+    <h2 class="text-center mb-4 text-primary">Item Details</h2>
+
+    <!-- Item Info -->
+    <div class="row">
+      <div class="col-md-6">
+        {% if item.image %}
+          <img src="{{ item.image.url }}" class="img-fluid rounded-3 mb-3" alt="{{ item.name }}">
+        {% else %}
+          <img src="{% static 'img/no-image.png' %}" class="img-fluid rounded-3 mb-3" alt="No Image">
+        {% endif %}
+      </div>
+
+      <div class="col-md-6">
+        <h4 class="fw-bold">{{ item.name }}</h4>
+        <p><strong>Category:</strong> {{ item.category }}</p>
+        <p><strong>Location:</strong> {{ item.location }}</p>
+        <p><strong>Date:</strong> {{ item.date_lost|date:"F j, Y" }}</p>
+        <p><strong>Description:</strong><br> {{ item.description }}</p>
+
+        {% if item.contact_info %}
+          <div class="alert alert-info mt-3">
+            <strong>Contact Info:</strong> {{ item.contact_info }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{% url 'home' %}" class="btn btn-secondary px-4">← Back to Home</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -19,9 +19,8 @@ class FoundItem(models.Model):
 
     def __str__(self):
         return self.title
-from django.db import models
 
-# Create your models here.
+
 class Item(models.Model):
     name = models.CharField(max_length=100)
     category = models.CharField(max_length=50)
@@ -47,3 +46,16 @@ class Notification(models.Model):
     def __str__(self):
         who = self.recipient.username if self.recipient else (self.recipient_contact or "Unknown")
         return f"Notification to {who}: {self.message[:40]}"
+
+
+class ReportItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item_name = models.CharField(max_length=100)
+    description = models.TextField()
+    location = models.CharField(max_length=100)
+    date_lost = models.DateField()
+    image = models.ImageField(upload_to='item_images/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.item_name

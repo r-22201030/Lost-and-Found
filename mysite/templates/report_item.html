@@ -1,11 +1,175 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Report Lost or Found Item</h1>
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Report Item{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<style>
+  /* Page background like homepage */
+  body {
+    background-color: #e0f7fa; /* light minty/teal */
+    font-family: Arial, sans-serif;
+  }
+
+  /* Container styling */
+  .report-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 35px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+
+  /* Form headings */
+  .report-container h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #00796b; /* darker teal for heading */
+  }
+
+  /* Labels */
+  .report-container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+
+  /* Inputs and textarea */
+  .report-container input[type="text"],
+  .report-container input[type="date"],
+  .report-container input[type="file"],
+  .report-container textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .report-container textarea {
+    resize: vertical;
+  }
+
+  /* Submit button */
+  .report-container button {
+    width: 100%;
+    background-color: #00796b; /* teal */
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .report-container button:hover {
+    background-color: #004d40;
+    transform: translateY(-2px);
+  }
+
+  /* Error messages */
+  .report-container .error-msg {
+    color: red;
+    font-size: 13px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+
+  /* Image preview */
+  #photoPreview {
+    margin-top: 10px;
+    max-width: 100%;
+    border-radius: 8px;
+    display: none;
+    border: 1px solid #ccc;
+  }
+</style>
+
+<div class="report-container">
+  <h2>Report Item</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Item Name -->
+    <label>Item Name</label>
+    {{ form.name }}
+    {% if form.name.errors %}
+      <p class="error-msg">{{ form.name.errors }}</p>
+    {% endif %}
+
+    <!-- Category -->
+    <label>Category</label>
+    {{ form.category }}
+    {% if form.category.errors %}
+      <p class="error-msg">{{ form.category.errors }}</p>
+    {% endif %}
+
+    <!-- Location -->
+    <label>Location</label>
+    {{ form.location }}
+    {% if form.location.errors %}
+      <p class="error-msg">{{ form.location.errors }}</p>
+    {% endif %}
+
+    <!-- Date Lost -->
+    <label>Date Lost</label>
+    {{ form.date_lost }}
+    {% if form.date_lost.errors %}
+      <p class="error-msg">{{ form.date_lost.errors }}</p>
+    {% endif %}
+
+    <!-- Description -->
+    <label>Description</label>
+    {{ form.description }}
+    {% if form.description.errors %}
+      <p class="error-msg">{{ form.description.errors }}</p>
+    {% endif %}
+
+    <!-- Contact Info -->
+    <label>Contact Info</label>
+    {{ form.contact_info }}
+    {% if form.contact_info.errors %}
+      <p class="error-msg">{{ form.contact_info.errors }}</p>
+    {% endif %}
+
+    <!-- Photo -->
+    <label>Photo</label>
+    {{ form.image }}
+    <img id="photoPreview" src="#" alt="preview">
+    {% if form.image.errors %}
+      <p class="error-msg">{{ form.image.errors }}</p>
+    {% endif %}
+
+    <!-- Submit Button -->
+    <button type="submit">Report</button>
+  </form>
+</div>
+
+<script>
+const fileInput = document.getElementById('id_image');
+const preview = document.getElementById('photoPreview');
+
+if(fileInput){
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(!file){
+      preview.style.display = 'none';
+      preview.src = '#';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      preview.src = ev.target.result;
+      preview.style.display = 'block';
+    }
+    reader.readAsDataURL(file);
+  });
+}
+</script>
+{% endblock %}

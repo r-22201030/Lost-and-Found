@@ -57,7 +57,7 @@
           <!-- ✅ Report Item (শুধু login করা ইউজারের জন্য) -->
           {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'report' %}">Report Item</a>
+               <a class="nav-link" href="{% url 'report_item' %}">Report Item</a>
             </li>
           {% endif %}
 

@@ -3,6 +3,63 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<style>
+  body {
+    background-color: #e0f7fa; /* light teal / fresh look */
+    font-family: Arial, sans-serif;
+  }
+
+  h1, h4 {
+    color: #00796b; /* dark teal for headings */
+  }
+
+  .lead {
+    color: #004d40;
+  }
+
+  .card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .list-group-item {
+    border: none;
+    padding: 10px 0;
+    font-size: 15px;
+  }
+
+  .list-group-item:nth-child(odd) {
+    background-color: #f1f1f1;
+  }
+
+  .list-group-item:nth-child(even) {
+    background-color: #ffffff;
+  }
+
+  form input[type="text"] {
+    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+
+  form button {
+    border-radius: 6px;
+    padding: 10px 15px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  form button:hover {
+    background-color: #004d40;
+  }
+
+</style>
+
 <div class="container mt-5">
 
   <!-- Header -->
@@ -72,9 +129,5 @@
     </div>
   </div>
 
-
-
-  </div>
-
-
+</div>
 {% endblock %}

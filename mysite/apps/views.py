@@ -3,7 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
-from .models import LostItem, FoundItem
+
+from .models import LostItem, FoundItem, Item
+from .forms import ReportItemForm
 
 
 # ✅ Home Page (with Search)
@@ -12,10 +14,10 @@ def home_page(request):
 
     if query:
         lost_items = LostItem.objects.filter(
-            Q(name__icontains=query) | Q(location__icontains=query)
+            Q(title__icontains=query) | Q(location__icontains=query)
         )
         found_items = FoundItem.objects.filter(
-            Q(name__icontains=query) | Q(location__icontains=query)
+            Q(title__icontains=query) | Q(location__icontains=query)
         )
     else:
         lost_items = LostItem.objects.all()
@@ -41,7 +43,6 @@ def signup_page(request):
         if User.objects.filter(username=username).exists():
             return render(request, "signup.html", {"error": "Username already exists!"})
 
-        # নতুন user create
         user = User.objects.create_user(username=username, password=password)
         login(request, user)
         messages.success(request, f"Welcome {user.username}, your account has been created!")
@@ -85,13 +86,30 @@ def contact_page(request):
     return render(request, "contact.html")
 
 
+# ✅ Search Page (optional)
 def search(request):
     return render(request, 'search.html')
 
-def report_item(request):
-    return render(request, 'report.html')
 
-# ✅ Item Detail Page (NEW)
+# ✅ Report Item Page (FORM Version)
+def report_item(request):
+    if request.method == 'POST':
+        form = ReportItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            item = form.save(commit=False)
+            if request.user.is_authenticated:
+                item.created_by = request.user
+            item.save()
+            messages.success(request, 'Item reported successfully!')
+            return redirect('report_item')  # submission success → same page
+    else:
+        form = ReportItemForm()
+
+    # ✅ Template path ঠিক করা হলো
+    return render(request, 'report_item.html', {'form': form})
+
+
+# ✅ Item Detail Page
 def item_detail(request, item_type, id):
     """
     item_type: 'lost' or 'found'

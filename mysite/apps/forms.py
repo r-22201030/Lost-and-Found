@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Item, LostItem, FoundItem  # নিশ্চিত করো models ঠিক আছে
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text='Required. Enter a valid email address.')
@@ -24,3 +25,21 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class ReportItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = [
+            'name',
+            'category',
+            'location',
+            'date_lost',
+            'description',
+            'contact_info',
+            'image'
+        ]
+        widgets = {
+            'date_lost': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 3}),
+        }

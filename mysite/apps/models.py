@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class LostItem(models.Model):
     title = models.CharField(max_length=200)
@@ -32,3 +33,17 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Notification(models.Model):
+    recipient = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    recipient_contact = models.CharField(max_length=150, blank=True, null=True)
+    message = models.TextField()
+    lost_item = models.ForeignKey(LostItem, null=True, blank=True, on_delete=models.CASCADE)
+    found_item = models.ForeignKey(FoundItem, null=True, blank=True, on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        who = self.recipient.username if self.recipient else (self.recipient_contact or "Unknown")
+        return f"Notification to {who}: {self.message[:40]}"

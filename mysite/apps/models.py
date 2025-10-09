@@ -6,6 +6,7 @@ class LostItem(models.Model):
     description = models.TextField()
     date_lost = models.DateField()
     location = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -16,6 +17,7 @@ class FoundItem(models.Model):
     description = models.TextField()
     date_found = models.DateField()
     location = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='found_items/', blank=True, null=True)
 
     def __str__(self):
         return self.title

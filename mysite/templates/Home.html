@@ -38,6 +38,16 @@
     background-color: #ffffff;
   }
 
+  .list-group-item a {
+    text-decoration: none;
+    color: #00796b;
+  }
+
+  .list-group-item a:hover {
+    text-decoration: underline;
+    color: #004d40;
+  }
+
   form input[type="text"] {
     border-radius: 6px;
     padding: 10px;
@@ -84,14 +94,19 @@
     </div>
   </div>
 
-  <!-- Search Results / Recent Lost & Found Items -->
+  <!-- Lost & Found Items -->
   <div class="row mb-5">
+    <!-- Lost Items -->
     <div class="col-md-6">
       <div class="card p-3 shadow-sm mb-3">
         <h4 class="card-title text-center">Lost Items</h4>
         <ul class="list-group list-group-flush">
           {% for item in lost_items %}
-            <li class="list-group-item">{{ item.title }} - {{ item.location }} ({{ item.date_lost }})</li>
+            <li class="list-group-item">
+              <a href="{% url 'item_detail' 'lost' item.id %}">
+                {{ item.title }} - {{ item.location }} ({{ item.date_lost }})
+              </a>
+            </li>
           {% empty %}
             <li class="list-group-item">No lost items found.</li>
           {% endfor %}
@@ -99,12 +114,17 @@
       </div>
     </div>
 
+    <!-- Found Items -->
     <div class="col-md-6">
       <div class="card p-3 shadow-sm mb-3">
         <h4 class="card-title text-center">Found Items</h4>
         <ul class="list-group list-group-flush">
           {% for item in found_items %}
-            <li class="list-group-item">{{ item.title }} - {{ item.location }} ({{ item.date_found }})</li>
+            <li class="list-group-item">
+              <a href="{% url 'item_detail' 'found' item.id %}">
+                {{ item.title }} - {{ item.location }} ({{ item.date_found }})
+              </a>
+            </li>
           {% empty %}
             <li class="list-group-item">No found items found.</li>
           {% endfor %}

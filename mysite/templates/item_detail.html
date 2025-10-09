@@ -1,41 +1,84 @@
 {% extends "base.html" %}
-{% block title %}Item Details{% endblock %}
+
+{% block title %}
+  {{ item.name }} Details
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="card shadow-lg p-4 border-0 rounded-4">
+<style>
+  body {
+    background-color: #e0f7fa; /* light teal / fresh look */
+    font-family: Arial, sans-serif;
+  }
 
-    <h2 class="text-center mb-4 text-primary">Item Details</h2>
+  .item-detail-container {
+    max-width: 700px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
 
-    <!-- Item Info -->
-    <div class="row">
-      <div class="col-md-6">
-        {% if item.image %}
-          <img src="{{ item.image.url }}" class="img-fluid rounded-3 mb-3" alt="{{ item.name }}">
-        {% else %}
-          <img src="{% static 'img/no-image.png' %}" class="img-fluid rounded-3 mb-3" alt="No Image">
-        {% endif %}
-      </div>
+  .item-detail-container h2 {
+    text-align: center;
+    color: #00796b;
+    margin-bottom: 25px;
+  }
 
-      <div class="col-md-6">
-        <h4 class="fw-bold">{{ item.name }}</h4>
-        <p><strong>Category:</strong> {{ item.category }}</p>
-        <p><strong>Location:</strong> {{ item.location }}</p>
-        <p><strong>Date:</strong> {{ item.date_lost|date:"F j, Y" }}</p>
-        <p><strong>Description:</strong><br> {{ item.description }}</p>
+  .item-detail-container img {
+    display: block;
+    max-width: 100%;
+    margin: 20px auto;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
 
-        {% if item.contact_info %}
-          <div class="alert alert-info mt-3">
-            <strong>Contact Info:</strong> {{ item.contact_info }}
-          </div>
-        {% endif %}
-      </div>
-    </div>
+  .item-detail-container p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+  }
 
-    <div class="text-center mt-4">
-      <a href="{% url 'home' %}" class="btn btn-secondary px-4">← Back to Home</a>
-    </div>
+  .item-detail-container .label {
+    font-weight: bold;
+    color: #555;
+  }
 
-  </div>
+  .back-button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px 20px;
+    background-color: #00796b;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+
+  .back-button:hover {
+    background-color: #004d40;
+  }
+</style>
+
+<div class="item-detail-container">
+  <h2>{{ item.name }} Details</h2>
+
+  {% if item.image %}
+    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+  {% endif %}
+
+  <p><span class="label">Category:</span> {{ item.category }}</p>
+  <p><span class="label">Location:</span> {{ item.location }}</p>
+  {% if item_type == 'lost' %}
+    <p><span class="label">Date Lost:</span> {{ item.date_lost }}</p>
+  {% elif item_type == 'found' %}
+    <p><span class="label">Date Found:</span> {{ item.date_found }}</p>
+  {% endif %}
+  <p><span class="label">Description:</span> {{ item.description }}</p>
+  <p><span class="label">Contact Info:</span> {{ item.contact_info }}</p>
+
+  <a href="{% url 'home' %}" class="back-button">Back to Home</a>
 </div>
 {% endblock %}

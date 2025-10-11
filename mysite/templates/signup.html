@@ -3,21 +3,95 @@
 {% block title %}Signup{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-  <div class="card p-4 shadow-sm" style="width: 100%; max-width: 400px; border-radius: 15px;">
-    <h3 class="card-title text-center mb-4">Sign Up</h3>
+<style>
+  /* Background gradient for Signup page */
+  body {
+    background: linear-gradient(135deg, #e0f7fa, #b2dfdb);
+  }
+
+  .signup-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .signup-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .signup-card h3 {
+    color: #00796b;
+    font-weight: 600;
+  }
+
+  .signup-card label {
+    font-weight: 500;
+    color: #00796b;
+  }
+
+  .signup-card input {
+    border-radius: 8px;
+    border: 1px solid #b2dfdb;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .signup-card input:focus {
+    border-color: #00796b;
+    box-shadow: 0 0 5px rgba(0, 121, 107, 0.3);
+    outline: none;
+  }
+
+  .btn-primary {
+    background-color: #00796b;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: #004d40;
+    transform: translateY(-2px);
+  }
+
+  .signup-card a {
+    color: #00796b;
+    text-decoration: none;
+  }
+
+  .signup-card a:hover {
+    text-decoration: underline;
+    color: #004d40;
+  }
+
+  .messages {
+    font-size: 0.9rem;
+    color: #d32f2f;
+    text-align: center;
+  }
+
+  .form-check-label {
+    color: #004d40;
+  }
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+  <div class="signup-card w-100" style="max-width: 400px;">
+    <h3 class="text-center mb-4">Sign Up</h3>
 
     <form method="post">
       {% csrf_token %}
 
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" name="username" id="username" required>
+        <input type="text" class="form-control" name="username" id="username" placeholder="Enter your username" required>
       </div>
 
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" name="password" id="password" required>
+        <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password" required>
       </div>
 
       <div class="form-check mb-3">
@@ -31,7 +105,7 @@
     </form>
 
     {% if error %}
-      <p class="text-danger mt-2">{{ error }}</p>
+      <div class="messages mt-2">{{ error }}</div>
     {% endif %}
 
     <p class="text-center mt-3">

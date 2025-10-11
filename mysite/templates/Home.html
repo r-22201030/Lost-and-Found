@@ -5,12 +5,12 @@
 {% block content %}
 <style>
   body {
-    background-color: #e0f7fa; /* light teal / fresh look */
+    background-color: #e0f7fa;
     font-family: Arial, sans-serif;
   }
 
   h1, h4 {
-    color: #00796b; /* dark teal for headings */
+    color: #00796b;
   }
 
   .lead {
@@ -22,6 +22,7 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
   }
 
   .list-group-item {
@@ -68,6 +69,26 @@
     background-color: #004d40;
   }
 
+  .testimonial {
+    background-color: #80cbc4;
+    color: #004d40;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+
+  .contact-form {
+    background-color: #80cbc4;
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  footer {
+    background-color: #00796b;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+  }
 </style>
 
 <div class="container mt-5">
@@ -76,30 +97,15 @@
   <div class="text-center mb-5">
     <h1>Lost & Found Management System</h1>
     <p class="lead">Find what's lost or report what you found!</p>
-  </div>
-
-  <!-- 🔎 Search Bar -->
-  <div class="row justify-content-center mb-4">
-    <div class="col-md-6">
-      <form method="get" action="{% url 'home' %}" class="d-flex">
-        <input
-          type="text"
-          name="q"
-          value="{{ query }}"
-          class="form-control me-2"
-          placeholder="Search items by title or location..."
-        >
-        <button type="submit" class="btn btn-primary">Search</button>
-      </form>
-    </div>
+    <a href="{% url 'report_item' %}" class="btn btn-primary">Report Item</a>
   </div>
 
   <!-- Lost & Found Items -->
   <div class="row mb-5">
-    <!-- Lost Items -->
+    <!-- Recent Lost Items -->
     <div class="col-md-6">
-      <div class="card p-3 shadow-sm mb-3">
-        <h4 class="card-title text-center">Lost Items</h4>
+      <h4>Recent Lost Items</h4>
+      <div class="card">
         <ul class="list-group list-group-flush">
           {% for item in lost_items %}
             <li class="list-group-item">
@@ -114,10 +120,10 @@
       </div>
     </div>
 
-    <!-- Found Items -->
+    <!-- Recent Found Items -->
     <div class="col-md-6">
-      <div class="card p-3 shadow-sm mb-3">
-        <h4 class="card-title text-center">Found Items</h4>
+      <h4>Recent Found Items</h4>
+      <div class="card">
         <ul class="list-group list-group-flush">
           {% for item in found_items %}
             <li class="list-group-item">
@@ -133,21 +139,62 @@
     </div>
   </div>
 
+  <!-- Our Stories / Testimonials -->
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <div class="testimonial">
+        Because of Lost & Found System I can found my lost wallet<br>
+        - Rehenuma Tabassum
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="testimonial">
+        The process is simple, helpful & trustful<br>
+        - Sadia Afrin
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Form -->
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <h4>Contact Us</h4>
+      <p>74/A, Green Road, Dhaka-1205, Bangladesh<br>
+      info@lostandfound.com<br>
+      +09-12345-897</p>
+    </div>
+    <div class="col-md-6">
+      <h4>Send Message</h4>
+      <form class="contact-form" method="post" action="{% url 'contact' %}">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Name" class="form-control mb-2" required>
+        <input type="text" name="email" placeholder="Email" class="form-control mb-2" required>
+        <textarea name="message" placeholder="Message" class="form-control mb-2" rows="4" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Mission & Vision -->
   <div class="row mb-5">
     <div class="col-md-6">
-      <div class="card p-3 shadow-sm mb-3">
-        <h4 class="card-title text-center">Mission</h4>
+      <div class="card">
+        <h4 class="text-center">Mission</h4>
         <p class="text-center">To help people find lost items quickly and efficiently.</p>
       </div>
     </div>
     <div class="col-md-6">
-      <div class="card p-3 shadow-sm mb-3">
-        <h4 class="card-title text-center">Vision</h4>
+      <div class="card">
+        <h4 class="text-center">Vision</h4>
         <p class="text-center">A community where lost items are reunited with their owners easily.</p>
       </div>
     </div>
   </div>
 
 </div>
+
+<footer>
+  &copy; 2025 | Lost & Found Management System
+</footer>
+
 {% endblock %}

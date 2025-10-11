@@ -10,11 +10,13 @@
   }
 
   h1, h4 {
-    color: #00796b;
+    color: #000000;
+    font-family: Arial, Inria sans;
   }
 
   .lead {
-    color: #004d40;
+    color: #000000;
+    font-family: Arial, Inria sans;
   }
 
   .card {
@@ -99,6 +101,22 @@
     <p class="lead">Find what's lost or report what you found!</p>
     <a href="{% url 'report_item' %}" class="btn btn-primary">Report Item</a>
   </div>
+
+  <!--  Search Bar -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+      <form method="get" action="{% url 'home' %}" class="d-flex">
+        <input
+          type="text"
+          name="q"
+          value="{{ query }}"
+          class="form-control me-2"
+          placeholder="Search items by title or location..."
+        >
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+   </div>
+</div>
 
   <!-- Lost & Found Items -->
   <div class="row mb-5">

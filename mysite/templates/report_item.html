@@ -4,13 +4,11 @@
 
 {% block content %}
 <style>
-  /* Page background like homepage */
   body {
-    background-color: #e0f7fa; /* light minty/teal */
+    background-color: #e0f7fa;
     font-family: Arial, sans-serif;
   }
 
-  /* Container styling */
   .report-container {
     max-width: 600px;
     margin: 60px auto;
@@ -20,15 +18,13 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
   }
 
-  /* Form headings */
   .report-container h2 {
     text-align: center;
     font-size: 28px;
     margin-bottom: 25px;
-    color: #00796b; /* darker teal for heading */
+    color: #00796b;
   }
 
-  /* Labels */
   .report-container label {
     display: block;
     font-weight: bold;
@@ -36,7 +32,6 @@
     color: #555;
   }
 
-  /* Inputs and textarea */
   .report-container input[type="text"],
   .report-container input[type="date"],
   .report-container input[type="file"],
@@ -54,10 +49,9 @@
     resize: vertical;
   }
 
-  /* Submit button */
   .report-container button {
     width: 100%;
-    background-color: #00796b; /* teal */
+    background-color: #00796b;
     color: white;
     font-size: 16px;
     padding: 12px;
@@ -72,7 +66,6 @@
     transform: translateY(-2px);
   }
 
-  /* Error messages */
   .report-container .error-msg {
     color: red;
     font-size: 13px;
@@ -80,13 +73,25 @@
     margin-bottom: 10px;
   }
 
-  /* Image preview */
   #photoPreview {
     margin-top: 10px;
     max-width: 100%;
     border-radius: 8px;
     display: none;
     border: 1px solid #ccc;
+  }
+
+  .see-reports {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #00796b;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .see-reports:hover {
+    text-decoration: underline;
   }
 </style>
 
@@ -96,59 +101,53 @@
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <!-- Item Name -->
     <label>Item Name</label>
     {{ form.name }}
-    {% if form.name.errors %}
-      <p class="error-msg">{{ form.name.errors }}</p>
-    {% endif %}
+    {% for error in form.name.errors %}
+      <p class="error-msg">{{ error }}</p>
+    {% endfor %}
 
-    <!-- Category -->
     <label>Category</label>
     {{ form.category }}
-    {% if form.category.errors %}
-      <p class="error-msg">{{ form.category.errors }}</p>
-    {% endif %}
+    {% for error in form.category.errors %}
+      <p class="error-msg">{{ error }}</p>
+    {% endfor %}
 
-    <!-- Location -->
     <label>Location</label>
     {{ form.location }}
-    {% if form.location.errors %}
-      <p class="error-msg">{{ form.location.errors }}</p>
-    {% endif %}
+    {% for error in form.location.errors %}
+      <p class="error-msg">{{ error }}</p>
+    {% endfor %}
 
-    <!-- Date Lost -->
     <label>Date Lost</label>
     {{ form.date_lost }}
-    {% if form.date_lost.errors %}
-      <p class="error-msg">{{ form.date_lost.errors }}</p>
-    {% endif %}
+    {% for error in form.date_lost.errors %}
+      <p class="error-msg">{{ error }}</p>
+    {% endfor %}
 
-    <!-- Description -->
     <label>Description</label>
     {{ form.description }}
-    {% if form.description.errors %}
-      <p class="error-msg">{{ form.description.errors }}</p>
-    {% endif %}
+    {% for error in form.description.errors %}
+      <p class="error-msg">{{ error }}</p>
+    {% endfor %}
 
-    <!-- Contact Info -->
     <label>Contact Info</label>
     {{ form.contact_info }}
-    {% if form.contact_info.errors %}
-      <p class="error-msg">{{ form.contact_info.errors }}</p>
-    {% endif %}
+    {% for error in form.contact_info.errors %}
+      <p class="error-msg">{{ error }}</p>
+    {% endfor %}
 
-    <!-- Photo -->
     <label>Photo</label>
     {{ form.image }}
     <img id="photoPreview" src="#" alt="preview">
-    {% if form.image.errors %}
-      <p class="error-msg">{{ form.image.errors }}</p>
-    {% endif %}
+    {% for error in form.image.errors %}
+      <p class="error-msg">{{ error }}</p>
+    {% endfor %}
 
-    <!-- Submit Button -->
-    <button type="submit">Report</button>
+    <button type="submit">Submit Report</button>
   </form>
+
+  <a class="see-reports" href="{% url 'user_reports' %}">See My Reports</a>
 </div>
 
 <script>

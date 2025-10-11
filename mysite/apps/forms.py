@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Item, LostItem, FoundItem  # নিশ্চিত করো models ঠিক আছে
+from .models import Item, LostItem, FoundItem,Report
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text='Required. Enter a valid email address.')
@@ -42,4 +42,14 @@ class ReportItemForm(forms.ModelForm):
         widgets = {
             'date_lost': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
+        }
+
+
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['reason', 'description']  # ✅ 'details' নয়, 'description' ব্যবহার করো
+        widgets = {
+            'reason': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter reason'}),
+            'description': forms.Textarea(attrs={'rows': 3, 'class': 'form-control', 'placeholder': 'Write details about this report...'}),
         }

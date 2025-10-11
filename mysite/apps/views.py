@@ -3,12 +3,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
-from .models import LostItem, FoundItem, Item
-from .forms import ReportItemForm
+from .models import LostItem, FoundItem, Item, Report
+from .forms import ReportItemForm, ReportForm
 
 
-# ✅ Home Page (with Search)
+# -------------------------
+# Home Page (with Search)
+# -------------------------
 def home_page(request):
     query = request.GET.get('q', '').strip()
 
@@ -30,7 +33,9 @@ def home_page(request):
     })
 
 
-# ✅ Signup Page
+# -------------------------
+# Signup Page
+# -------------------------
 def signup_page(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -51,7 +56,9 @@ def signup_page(request):
     return render(request, "signup.html")
 
 
-# ✅ Login Page
+# -------------------------
+# Login Page
+# -------------------------
 def login_page(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -69,52 +76,57 @@ def login_page(request):
     return render(request, "login.html")
 
 
-# ✅ Logout Page
+# -------------------------
+# Logout Page
+# -------------------------
 def logout_page(request):
     logout(request)
     messages.info(request, "You have been logged out.")
     return redirect("login")
 
 
-# ✅ About Page
+# -------------------------
+# About & Contact Pages
+# -------------------------
 def about_page(request):
     return render(request, "about.html")
 
 
-# ✅ Contact Page
 def contact_page(request):
     return render(request, "contact.html")
 
 
-# ✅ Search Page (optional)
+# -------------------------
+# Search Page
+# -------------------------
 def search(request):
     return render(request, 'search.html')
 
 
-# ✅ Report Item Page (FORM Version)
+# -------------------------
+# Report New Item (User reports lost/found item)
+# -------------------------
+@login_required
 def report_item(request):
     if request.method == 'POST':
         form = ReportItemForm(request.POST, request.FILES)
         if form.is_valid():
             item = form.save(commit=False)
-            if request.user.is_authenticated:
-                item.created_by = request.user
+            # Optional: if you have a user field in Item
+            # item.user = request.user
             item.save()
             messages.success(request, 'Item reported successfully!')
-            return redirect('report_item')  # submission success → same page
+            return redirect('user_reports')  # redirect to user reports page after submission
     else:
         form = ReportItemForm()
 
-    # ✅ Template path ঠিক করা হলো
     return render(request, 'report_item.html', {'form': form})
 
 
-# ✅ Item Detail Page
+# -------------------------
+# Item Detail Page
+# -------------------------
 def item_detail(request, item_type, id):
-    """
-    item_type: 'lost' or 'found'
-    id: item id
-    """
     if item_type == "lost":
         item = get_object_or_404(LostItem, id=id)
     elif item_type == "found":
@@ -124,3 +136,42 @@ def item_detail(request, item_type, id):
         return redirect("home")
 
     return render(request, "item_detail.html", {"item": item, "item_type": item_type})
+
+
+# -------------------------
+# Report Existing Item to Admin
+# -------------------------
+@login_required
+def report_existing_item(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.item = item
+            report.reporter = request.user
+            report.save()
+
+            # Mark item as reported
+            item.is_reported = True
+            item.save()
+
+            messages.success(request, "Your report has been submitted successfully.")
+            return redirect('user_reports')  # redirect to user reports page
+    else:
+        form = ReportForm()
+
+    return render(request, 'report_existing_item.html', {
+        'form': form,
+        'item': item,
+    })
+
+
+# -------------------------
+# View All Reports by Logged-in User
+# -------------------------
+@login_required
+def user_reports(request):
+    reports = Report.objects.filter(reporter=request.user).order_by('-created_at')
+    return render(request, 'user_reports.html', {'reports': reports})

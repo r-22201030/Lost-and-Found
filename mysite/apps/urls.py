@@ -13,5 +13,12 @@ urlpatterns = [
     path('report/', views.report_item, name='report_item'),
     path('item/<str:item_type>/<int:id>/', views.item_detail, name='item_detail'),
 
+    # রিপোর্ট করা
+    path('report/', views.report_item, name='report_item'),
+
+    # ✅ existing item report
+    path('item/<int:item_id>/report/', views.report_existing_item, name='report_existing_item'),
+
+    path('my-reports/', views.user_reports, name='user_reports'),
 
 ]

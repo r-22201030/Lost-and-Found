@@ -1,0 +1,25 @@
+<!-- core/templates/core/user_reports.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Reports{% endblock %}
+
+{% block content %}
+<h2>My Reports</h2>
+
+{% if reports %}
+    <ul>
+        {% for report in reports %}
+        <li>
+            <strong>{{ report.item.name }}</strong> - {{ report.reason }} -
+            Status: {{ report.status }} <br>
+            {{ report.description }} <br>
+            Reported on: {{ report.created_at|date:"d M Y H:i" }}
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You have not reported any items yet.</p>
+{% endif %}
+
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}

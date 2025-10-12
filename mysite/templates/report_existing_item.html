@@ -1,9 +1,161 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Report Existing Item{% endblock %}
+
 {% block content %}
-<h2>Report "{{ item.name }}"</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-danger">Submit Report</button>
-</form>
+<style>
+  body {
+    background-color: #e0f7fa;
+    font-family: Arial, sans-serif;
+  }
+
+  .report-existing-container {
+    max-width: 700px;
+    margin: 60px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  .report-header {
+    background-color: #d32f2f;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .report-header h3 {
+    margin: 0;
+    font-size: 26px;
+  }
+
+  .report-body {
+    padding: 35px;
+  }
+
+  .item-info {
+    background-color: #f1f1f1;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+  }
+
+  .item-info h5 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    color: #d32f2f;
+  }
+
+  .item-info p {
+    margin: 4px 0;
+    color: #555;
+  }
+
+  .item-info img {
+    margin-top: 10px;
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .report-body label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #444;
+  }
+
+  .report-body input[type="text"],
+  .report-body textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .report-body textarea {
+    resize: vertical;
+  }
+
+  .report-body button {
+    width: 100%;
+    background-color: #d32f2f;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .report-body button:hover {
+    background-color: #9a0007;
+    transform: translateY(-2px);
+  }
+
+  .error-msg {
+    color: red;
+    font-size: 13px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+
+  .see-reports {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #d32f2f;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .see-reports:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="report-existing-container">
+  <div class="report-header">
+    <h3>🚨 Report This Item</h3>
+  </div>
+
+  <div class="report-body">
+    <!-- Existing Item Info -->
+    <div class="item-info">
+      <h5>{{ item.name }}</h5>
+      <p><strong>Category:</strong> {{ item.category }}</p>
+      <p><strong>Location:</strong> {{ item.location }}</p>
+      <p><strong>Description:</strong> {{ item.description }}</p>
+      {% if item.image %}
+        <img src="{{ item.image.url }}" alt="Item Image">
+      {% endif %}
+    </div>
+
+    <!-- Report Form -->
+    <form method="POST">
+      {% csrf_token %}
+
+      <label>Reason</label>
+      {{ form.reason }}
+      {% for error in form.reason.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
+
+      <label>Details</label>
+      {{ form.description }}
+      {% for error in form.description.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
+
+      <button type="submit">Submit Report</button>
+    </form>
+
+    <a class="see-reports" href="{% url 'user_reports' %}">See My Reports</a>
+  </div>
+</div>
 {% endblock %}

@@ -10,46 +10,55 @@
   }
 
   .report-container {
-    max-width: 600px;
+    max-width: 700px;
     margin: 60px auto;
-    padding: 35px;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
   }
 
-  .report-container h2 {
+  .report-header {
+    background-color: #00796b;
+    color: #fff;
     text-align: center;
-    font-size: 28px;
-    margin-bottom: 25px;
-    color: #00796b;
+    padding: 20px;
   }
 
-  .report-container label {
+  .report-header h3 {
+    margin: 0;
+    font-size: 26px;
+  }
+
+  .report-body {
+    padding: 35px;
+  }
+
+  .report-body label {
     display: block;
     font-weight: bold;
-    margin-bottom: 5px;
-    color: #555;
+    margin-bottom: 6px;
+    color: #444;
   }
 
-  .report-container input[type="text"],
-  .report-container input[type="date"],
-  .report-container input[type="file"],
-  .report-container textarea {
+  .report-body input[type="text"],
+  .report-body input[type="date"],
+  .report-body input[type="file"],
+  .report-body textarea {
     width: 100%;
     padding: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 14px;
     box-sizing: border-box;
   }
 
-  .report-container textarea {
+  .report-body textarea {
     resize: vertical;
   }
 
-  .report-container button {
+  .report-body button {
     width: 100%;
     background-color: #00796b;
     color: white;
@@ -61,12 +70,12 @@
     transition: background 0.3s, transform 0.2s;
   }
 
-  .report-container button:hover {
+  .report-body button:hover {
     background-color: #004d40;
     transform: translateY(-2px);
   }
 
-  .report-container .error-msg {
+  .error-msg {
     color: red;
     font-size: 13px;
     margin-top: -10px;
@@ -96,74 +105,78 @@
 </style>
 
 <div class="report-container">
-  <h2>Report Item</h2>
+  <div class="report-header">
+    <h3>📝 Report a Lost or Found Item</h3>
+  </div>
 
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+  <div class="report-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
 
-    <label>Item Name</label>
-    {{ form.name }}
-    {% for error in form.name.errors %}
-      <p class="error-msg">{{ error }}</p>
-    {% endfor %}
+      <label>Item Name</label>
+      {{ form.name }}
+      {% for error in form.name.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
 
-    <label>Category</label>
-    {{ form.category }}
-    {% for error in form.category.errors %}
-      <p class="error-msg">{{ error }}</p>
-    {% endfor %}
+      <label>Category</label>
+      {{ form.category }}
+      {% for error in form.category.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
 
-    <label>Location</label>
-    {{ form.location }}
-    {% for error in form.location.errors %}
-      <p class="error-msg">{{ error }}</p>
-    {% endfor %}
+      <label>Location</label>
+      {{ form.location }}
+      {% for error in form.location.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
 
-    <label>Date Lost</label>
-    {{ form.date_lost }}
-    {% for error in form.date_lost.errors %}
-      <p class="error-msg">{{ error }}</p>
-    {% endfor %}
+      <label>Date Lost</label>
+      {{ form.date_lost }}
+      {% for error in form.date_lost.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
 
-    <label>Description</label>
-    {{ form.description }}
-    {% for error in form.description.errors %}
-      <p class="error-msg">{{ error }}</p>
-    {% endfor %}
+      <label>Description</label>
+      {{ form.description }}
+      {% for error in form.description.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
 
-    <label>Contact Info</label>
-    {{ form.contact_info }}
-    {% for error in form.contact_info.errors %}
-      <p class="error-msg">{{ error }}</p>
-    {% endfor %}
+      <label>Contact Info</label>
+      {{ form.contact_info }}
+      {% for error in form.contact_info.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
 
-    <label>Photo</label>
-    {{ form.image }}
-    <img id="photoPreview" src="#" alt="preview">
-    {% for error in form.image.errors %}
-      <p class="error-msg">{{ error }}</p>
-    {% endfor %}
+      <label>Photo</label>
+      {{ form.image }}
+      <img id="photoPreview" src="#" alt="preview">
+      {% for error in form.image.errors %}
+        <p class="error-msg">{{ error }}</p>
+      {% endfor %}
 
-    <button type="submit">Submit Report</button>
-  </form>
+      <button type="submit">Submit Report</button>
+    </form>
 
-  <a class="see-reports" href="{% url 'user_reports' %}">See My Reports</a>
+    <a class="see-reports" href="{% url 'user_reports' %}">See My Reports</a>
+  </div>
 </div>
 
 <script>
 const fileInput = document.getElementById('id_image');
 const preview = document.getElementById('photoPreview');
 
-if(fileInput){
+if (fileInput) {
   fileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
-    if(!file){
+    if (!file) {
       preview.style.display = 'none';
       preview.src = '#';
       return;
     }
     const reader = new FileReader();
-    reader.onload = function(ev){
+    reader.onload = function(ev) {
       preview.src = ev.target.result;
       preview.style.display = 'block';
     }

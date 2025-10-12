@@ -5,9 +5,8 @@ from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
-from .models import LostItem, FoundItem, Item, Report
+from .models import LostItem, FoundItem, Item, Report, ReportItem
 from .forms import ReportItemForm, ReportForm
-
 
 # -------------------------
 # Home Page (with Search)
@@ -32,7 +31,6 @@ def home_page(request):
         "query": query,
     })
 
-
 # -------------------------
 # Signup Page
 # -------------------------
@@ -55,7 +53,6 @@ def signup_page(request):
 
     return render(request, "signup.html")
 
-
 # -------------------------
 # Login Page
 # -------------------------
@@ -75,7 +72,6 @@ def login_page(request):
 
     return render(request, "login.html")
 
-
 # -------------------------
 # Logout Page
 # -------------------------
@@ -84,24 +80,20 @@ def logout_page(request):
     messages.info(request, "You have been logged out.")
     return redirect("login")
 
-
 # -------------------------
 # About & Contact Pages
 # -------------------------
 def about_page(request):
     return render(request, "about.html")
 
-
 def contact_page(request):
     return render(request, "contact.html")
-
 
 # -------------------------
 # Search Page
 # -------------------------
 def search(request):
     return render(request, 'search.html')
-
 
 # -------------------------
 # Report New Item (User reports lost/found item)
@@ -111,17 +103,15 @@ def report_item(request):
     if request.method == 'POST':
         form = ReportItemForm(request.POST, request.FILES)
         if form.is_valid():
-            item = form.save(commit=False)
-            # Optional: if you have a user field in Item
-            # item.user = request.user
-            item.save()
-            messages.success(request, 'Item reported successfully!')
-            return redirect('user_reports')  # redirect to user reports page after submission
+            report_item = form.save(commit=False)
+            report_item.user = request.user  # attach logged-in user
+            report_item.save()
+            messages.success(request, 'Your item report has been submitted successfully!')
+            return redirect('user_reports')
     else:
         form = ReportItemForm()
 
     return render(request, 'report_item.html', {'form': form})
-
 
 # -------------------------
 # Item Detail Page
@@ -137,9 +127,8 @@ def item_detail(request, item_type, id):
 
     return render(request, "item_detail.html", {"item": item, "item_type": item_type})
 
-
 # -------------------------
-# Report Existing Item to Admin
+# Report Existing Item to Admin (system-level report)
 # -------------------------
 @login_required
 def report_existing_item(request, item_id):
@@ -153,12 +142,12 @@ def report_existing_item(request, item_id):
             report.reporter = request.user
             report.save()
 
-            # Mark item as reported
+            # Optional: mark item as reported
             item.is_reported = True
             item.save()
 
             messages.success(request, "Your report has been submitted successfully.")
-            return redirect('user_reports')  # redirect to user reports page
+            return redirect('user_reports')
     else:
         form = ReportForm()
 
@@ -167,11 +156,23 @@ def report_existing_item(request, item_id):
         'item': item,
     })
 
-
 # -------------------------
 # View All Reports by Logged-in User
 # -------------------------
 @login_required
 def user_reports(request):
-    reports = Report.objects.filter(reporter=request.user).order_by('-created_at')
-    return render(request, 'user_reports.html', {'reports': reports})
+    """
+    Show all reports created by the logged-in user.
+    - my_reports: reports submitted via ReportItemForm (new items)
+    - admin_reports: system-level reports on existing Item objects (only pending)
+    """
+    # User-submitted reports (all considered pending by default)
+    my_reports = ReportItem.objects.filter(user=request.user).order_by('-created_at')
+
+    # System-level reports: only pending
+    admin_reports = Report.objects.filter(reporter=request.user, status='pending').order_by('-created_at')
+
+    return render(request, 'user_reports.html', {
+        'my_reports': my_reports,
+        'admin_reports': admin_reports,
+    })

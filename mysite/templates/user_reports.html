@@ -1,25 +1,188 @@
-<!-- core/templates/core/user_reports.html -->
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
+{% load static %}
 {% block title %}My Reports{% endblock %}
 
 {% block content %}
-<h2>My Reports</h2>
+<style>
+  body {
+    background-color: #e0f7fa;
+    font-family: Arial, sans-serif;
+  }
 
-{% if reports %}
-    <ul>
-        {% for report in reports %}
-        <li>
-            <strong>{{ report.item.name }}</strong> - {{ report.reason }} -
-            Status: {{ report.status }} <br>
-            {{ report.description }} <br>
-            Reported on: {{ report.created_at|date:"d M Y H:i" }}
-        </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>You have not reported any items yet.</p>
-{% endif %}
+  .reports-container {
+    max-width: 850px;
+    margin: 60px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
 
-<a href="{% url 'home' %}">Back to Home</a>
+  .reports-header {
+    background-color: #00796b;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .reports-header h3 {
+    margin: 0;
+    font-size: 26px;
+  }
+
+  .reports-body {
+    padding: 30px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+
+  table th, table td {
+    padding: 14px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  table th {
+    background-color: #e0f2f1;
+    color: #004d40;
+    font-weight: bold;
+  }
+
+  table tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .badge {
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  .badge.pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .badge.reviewed {
+    background-color: #c8e6c9;
+    color: #256029;
+  }
+
+  .badge.rejected {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+  }
+
+  .no-reports {
+    text-align: center;
+    color: #777;
+    padding: 40px 10px;
+  }
+
+  .no-reports h5 {
+    font-size: 20px;
+    color: #00796b;
+  }
+
+  .no-reports p {
+    margin-top: 5px;
+  }
+
+  .btn-report {
+    display: inline-block;
+    background-color: #00796b;
+    color: white;
+    text-decoration: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .btn-report:hover {
+    background-color: #004d40;
+    transform: translateY(-2px);
+  }
+</style>
+
+<div class="reports-container">
+  <div class="reports-header">
+    <h3>📋 My Submitted Reports</h3>
+  </div>
+
+  <div class="reports-body">
+    {% if admin_reports %}
+      <h5 class="mb-3">System-level Reports (Pending)</h5>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Reason</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Reported On</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for report in admin_reports %}
+          <tr>
+            <td>{{ report.item.name }}</td>
+            <td>{{ report.reason }}</td>
+            <td>{{ report.description }}</td>
+            <td>
+              {% if report.status == 'pending' %}
+                <span class="badge pending">Pending</span>
+              {% elif report.status == 'reviewed' %}
+                <span class="badge reviewed">Reviewed</span>
+              {% elif report.status == 'rejected' %}
+                <span class="badge rejected">Rejected</span>
+              {% endif %}
+            </td>
+            <td>{{ report.created_at|date:"M d, Y h:i A" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+    {% if my_reports %}
+      <h5 class="mt-4 mb-3">Your Submitted Items</h5>
+      <table>
+        <thead>
+          <tr>
+            <th>Item Name</th>
+            <th>Description</th>
+            <th>Location</th>
+            <th>Date Lost</th>
+            <th>Reported On</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in my_reports %}
+          <tr>
+            <td>{{ item.item_name }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.location }}</td>
+            <td>{{ item.date_lost|date:"M d, Y" }}</td>
+            <td>{{ item.created_at|date:"M d, Y h:i A" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+    {% if not admin_reports and not my_reports %}
+      <div class="no-reports">
+        <h5>No Reports Yet 😕</h5>
+        <p>You haven’t reported any items so far.</p>
+        <a href="{% url 'report_item' %}" class="btn-report mt-3">Report an Item</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

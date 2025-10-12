@@ -1,7 +1,5 @@
-# apps/models.py
 from django.db import models
 from django.contrib.auth.models import User
-
 
 # -------------------------
 # Lost and Found Models
@@ -39,7 +37,7 @@ class Item(models.Model):
     description = models.TextField()
     contact_info = models.CharField(max_length=100)
     image = models.ImageField(upload_to='items/', blank=True, null=True)
-    is_reported = models.BooleanField(default=False)  # ✅ new field for report tracking
+    is_reported = models.BooleanField(default=False)  # Optional: mark if reported
 
     def __str__(self):
         return self.name
@@ -63,8 +61,9 @@ class Notification(models.Model):
 
 
 # -------------------------
-# User Reported Items
+# User Reported Items (Optional)
 # -------------------------
+# তুমি চাইলে বাদ দিতে পারো, এখন সব report handled by `Report`
 class ReportItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports')
     item_name = models.CharField(max_length=100)
@@ -79,7 +78,7 @@ class ReportItem(models.Model):
 
 
 # -------------------------
-# Admin Report System (Auto visible)
+# Admin / User Report System
 # -------------------------
 class Report(models.Model):
     STATUS_PENDING = 'pending'
@@ -94,12 +93,12 @@ class Report(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='reports')
     reporter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     reason = models.CharField(max_length=255)
-    description = models.TextField(blank=True)  # user reports details
+    description = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_at']  # নতুন report উপরে দেখাবে
+        ordering = ['-created_at']  # newest report first
 
     def __str__(self):
         reporter_name = self.reporter.username if self.reporter else "Anonymous"

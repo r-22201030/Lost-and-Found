@@ -2,10 +2,17 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Item, LostItem, FoundItem,Report
+from .models import Item, Report
 
+
+# -------------------------
+# ✅ User Signup Form
+# -------------------------
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(required=True, help_text='Required. Enter a valid email address.')
+    email = forms.EmailField(
+        required=True,
+        help_text='Required. Enter a valid email address.'
+    )
 
     class Meta:
         model = User
@@ -27,6 +34,9 @@ class SignUpForm(UserCreationForm):
         return user
 
 
+# -------------------------
+# ✅ Form for Reporting a Lost/Found Item
+# -------------------------
 class ReportItemForm(forms.ModelForm):
     class Meta:
         model = Item
@@ -37,19 +47,33 @@ class ReportItemForm(forms.ModelForm):
             'date_lost',
             'description',
             'contact_info',
-            'image'
+            'image',
         ]
         widgets = {
-            'date_lost': forms.DateInput(attrs={'type': 'date'}),
-            'description': forms.Textarea(attrs={'rows': 3}),
+            'date_lost': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.TextInput(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'contact_info': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 
+# -------------------------
+# ✅ Form for Reporting Existing Item (to Admin)
+# -------------------------
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['reason', 'description']  # ✅ 'details' নয়, 'description' ব্যবহার করো
+        fields = ['reason', 'description']
         widgets = {
-            'reason': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter reason'}),
-            'description': forms.Textarea(attrs={'rows': 3, 'class': 'form-control', 'placeholder': 'Write details about this report...'}),
+            'reason': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter reason',
+            }),
+            'description': forms.Textarea(attrs={
+                'rows': 3,
+                'class': 'form-control',
+                'placeholder': 'Write details about this report...',
+            }),
         }

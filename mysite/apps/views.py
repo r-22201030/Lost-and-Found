@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserChangeForm
+from .forms import EditProfileForm, CustomPasswordChangeForm
 
 from .models import LostItem, FoundItem, Item, Report, ReportItem
 from .forms import ReportItemForm, ReportForm
@@ -66,7 +68,7 @@ def login_page(request):
         if user is not None:
             login(request, user)
             messages.success(request, f"Welcome back, {user.username}!")
-            return redirect("home")
+            return redirect("profile")
         else:
             messages.error(request, "Invalid username or password")
 
@@ -175,4 +177,45 @@ def user_reports(request):
     return render(request, 'user_reports.html', {
         'my_reports': my_reports,
         'admin_reports': admin_reports,
+    })
+
+@login_required
+def profile_page(request):
+    user = request.user  # logged-in user
+    return render(request, 'profile.html', {'user': user})
+
+
+@login_required
+def profile_view(request):
+    user = request.user
+    lost_items = LostItem.objects.filter(user=user)  # এই user-এর রিপোর্ট করা সব item
+
+    return render(request, 'profile.html', {
+        'user': user,
+        'lost_items': lost_items,
+    })
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        profile_form = EditProfileForm(request.POST, instance=request.user)
+        password_form = CustomPasswordChangeForm(request.user, request.POST)
+
+        if 'first_name' in request.POST and profile_form.is_valid():
+            profile_form.save()
+            return redirect('profile')
+
+        elif password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)  # logout না হয়
+            return redirect('profile')
+
+    else:
+        profile_form = EditProfileForm(instance=request.user)
+        password_form = CustomPasswordChangeForm(request.user)
+
+    return render(request, 'edit_profile.html', {
+        'profile_form': profile_form,
+        'password_form': password_form,
     })

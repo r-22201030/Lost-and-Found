@@ -10,6 +10,8 @@ class LostItem(models.Model):
     date_lost = models.DateField()
     location = models.CharField(max_length=200)
     image = models.ImageField(upload_to='lost_items/', blank=True, null=True)
+    found = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.title

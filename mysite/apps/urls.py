@@ -21,4 +21,6 @@ urlpatterns = [
 
     # User's reports
     path('my-reports/', views.user_reports, name='user_reports'),
+    path('profile/', views.profile_page, name='profile'),
+    path('edit-profile/', views.edit_profile, name='edit_profile'),
 ]

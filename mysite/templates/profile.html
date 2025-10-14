@@ -17,11 +17,14 @@
       <h5>Notifications</h5>
       {% if notifications %}
         <ul class="list-group mt-2">
-          {% for notif in notifications %}
-            <li class="list-group-item {% if not notif.is_read %}fw-bold{% endif %}">
-              {{ notif.message }}
-            </li>
-          {% endfor %}
+         {% for notif in notifications %}
+  <li class="list-group-item {% if not notif.is_read %}fw-bold{% endif %}">
+    {{ notif.message }}
+  </li>
+{% empty %}
+  <li class="list-group-item text-muted">No notifications</li>
+{% endfor %}
+
         </ul>
       {% else %}
         <p class="text-muted">No notifications yet.</p>

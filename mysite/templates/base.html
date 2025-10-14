@@ -17,6 +17,17 @@
       .navbar-nav { background-color: #00796b; padding: 1rem; border-radius: 8px; }
       .navbar-nav .nav-link { padding: 0.5rem 1rem; }
     }
+
+
+    /* ✅ Scrollable for many items */
+    max-height: 300px;  /* সর্বোচ্চ height */
+    overflow-y: auto;   /* vertical scroll আসে যখন item বেশি হয় */
+  }
+  .dropdown-item:hover { background-color: #e0f7fa; color: #00796b !important; }
+  @media (max-width: 991px) {
+    .navbar-nav { background-color: #00796b; padding: 1rem; border-radius: 8px; }
+    .navbar-nav .nav-link { padding: 0.5rem 1rem; }
+  }
   </style>
 </head>
 <body>
@@ -38,27 +49,38 @@
             <a class="nav-link" href="{% url 'home' %}">Home</a>
           </li>
 
-          <!-- Items Dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="itemsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Items
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="itemsDropdown">
-              <li><h6 class="dropdown-header">Lost Items</h6></li>
-              {% for item in lost_items %}
-                <li><a class="dropdown-item" href="{% url 'item_detail' 'lost' item.id %}">{{ item.name }}</a></li>
-              {% empty %}
-                <li><span class="dropdown-item text-muted">No lost items</span></li>
-              {% endfor %}
-              <li><hr class="dropdown-divider"></li>
-              <li><h6 class="dropdown-header">Found Items</h6></li>
-              {% for item in found_items %}
-                <li><a class="dropdown-item" href="{% url 'item_detail' 'found' item.id %}">{{ item.name }}</a></li>
-              {% empty %}
-                <li><span class="dropdown-item text-muted">No found items</span></li>
-              {% endfor %}
-            </ul>
-          </li>
+         <!-- Items Dropdown -->
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="itemsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Items
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="itemsDropdown" style="max-height: 300px; overflow-y: auto;">
+
+    <!-- Lost Items -->
+    <li><h6 class="dropdown-header">Lost Items</h6></li>
+    {% for item in lost_items %}
+      <li>
+        <a class="dropdown-item" href="{% url 'item_detail' 'lost' item.id %}">{{ item.name }}</a>
+      </li>
+    {% empty %}
+      <li><span class="dropdown-item text-muted">No lost items</span></li>
+    {% endfor %}
+
+    <li><hr class="dropdown-divider"></li>
+
+    <!-- Found Items -->
+    <li><h6 class="dropdown-header">Found Items</h6></li>
+    {% for item in found_items %}
+      <li>
+        <a class="dropdown-item" href="{% url 'item_detail' 'found' item.id %}">{{ item.name }}</a>
+      </li>
+    {% empty %}
+      <li><span class="dropdown-item text-muted">No found items</span></li>
+    {% endfor %}
+
+  </ul>
+</li>
+
 
           <!-- Report Item (only for logged-in users) -->
           {% if user.is_authenticated %}
@@ -99,6 +121,8 @@
       </div>
     </div>
   </nav>
+
+
   <!-- Navbar End -->
 
   <div class="container mt-5">

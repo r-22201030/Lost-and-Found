@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.core.mail import send_mail
 from django.conf import settings
 
-from .models import FoundItem, LostItem, Notification
+from .models import FoundItem, LostItem, Notification,ReportItem
 
 @receiver(post_save, sender=FoundItem)
 def notify_on_found_item(sender, instance, created, **kwargs):
@@ -55,3 +55,16 @@ def notify_on_found_item(sender, instance, created, **kwargs):
         except Exception as e:
             # dev-time: you can log this. We keep silent so production doesn't crash.
             pass
+
+
+@receiver(post_save, sender=FoundItem)
+def create_notification(sender, instance, created, **kwargs):
+    if created:
+        # ধরা যাক FoundItem-এর title-এর সাথে matching report খুঁজছ
+        reports = ReportItem.objects.filter(item_name__iexact=instance.title)
+        for report in reports:
+            Notification.objects.create(
+                user=report.user,
+                message=f"Your reported item '{report.item_name}' has been found!",
+                link=f"/found_item/{instance.id}/"
+            )

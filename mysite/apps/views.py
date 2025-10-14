@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserChangeForm
 from .forms import EditProfileForm, CustomPasswordChangeForm
 
-from .models import LostItem, FoundItem, Item, Report, ReportItem
+from .models import LostItem, FoundItem, Item, Report, ReportItem,Notification
 from .forms import ReportItemForm, ReportForm
 
 # -------------------------
@@ -218,4 +218,18 @@ def edit_profile(request):
     return render(request, 'edit_profile.html', {
         'profile_form': profile_form,
         'password_form': password_form,
+    })
+
+@login_required
+def notifications(request):
+    return render(request, 'notification.html')
+
+
+@login_required
+def profile(request):
+    profile = request.user.profile  # Assuming Profile model exists
+    notifications = request.user.notifications.all().order_by('-created_at')  # Latest first
+    return render(request, 'profile.html', {
+        'profile': profile,
+        'notifications': notifications
     })

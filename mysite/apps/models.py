@@ -65,7 +65,7 @@ class Notification(models.Model):
 # -------------------------
 # User Reported Items (Optional)
 # -------------------------
-# তুমি চাইলে বাদ দিতে পারো, এখন সব report handled by `Report`
+
 class ReportItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports')
     item_name = models.CharField(max_length=100)
@@ -105,3 +105,14 @@ class Report(models.Model):
     def __str__(self):
         reporter_name = self.reporter.username if self.reporter else "Anonymous"
         return f"Report #{self.id} on {self.item.name} by {reporter_name} ({self.status})"
+
+
+class Notification(models.Model):
+    # ধরো user id=1 assign করছ পুরনো rows-এর জন্য
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', default=1)
+    message = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.message}"

@@ -5,29 +5,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}My Site{% endblock %}</title>
+
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
   <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
   <style>
     .navbar { background-color: #00796b; }
-    .navbar-brand, .navbar-nav .nav-link { color: white !important; font-weight: 500; transition: color 0.3s; }
+    .navbar-brand, .navbar-nav .nav-link {
+      color: white !important;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
     .navbar-nav .nav-link:hover { color: #80cbc4 !important; }
-    .dropdown-menu { border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .dropdown-menu {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
     .dropdown-item:hover { background-color: #e0f7fa; color: #00796b !important; }
     @media (max-width: 991px) {
       .navbar-nav { background-color: #00796b; padding: 1rem; border-radius: 8px; }
       .navbar-nav .nav-link { padding: 0.5rem 1rem; }
     }
 
+    /* ✅ Dropdown scrollable if too long */
+    .dropdown-menu {
+      max-height: 300px;
+      overflow-y: auto;
+    }
 
-    /* ✅ Scrollable for many items */
-    max-height: 300px;  /* সর্বোচ্চ height */
-    overflow-y: auto;   /* vertical scroll আসে যখন item বেশি হয় */
-  }
-  .dropdown-item:hover { background-color: #e0f7fa; color: #00796b !important; }
-  @media (max-width: 991px) {
-    .navbar-nav { background-color: #00796b; padding: 1rem; border-radius: 8px; }
-    .navbar-nav .nav-link { padding: 0.5rem 1rem; }
-  }
+    /* ✅ Footer styles */
+    footer {
+      background-color: #f8f9fa;
+      text-align: center;
+      color: #6c757d;
+      padding: 20px 0;
+      margin-top: 50px;
+    }
+
+    footer a {
+      color: #00796b;
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #004d40;
+    }
+
+    /* ✅ Social icon styles */
+    .social-icons a {
+      display: inline-block;
+      width: 38px;
+      height: 38px;
+      line-height: 38px;
+      text-align: center;
+      border-radius: 50%;
+      color: white;
+      margin: 0 6px;
+      font-size: 18px;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      transform: scale(1.1);
+    }
+
+    .social-icons .facebook { background-color: #3b5998; }
+    .social-icons .linkedin { background-color: #0077b5; }
+    .social-icons .x-twitter { background-color: #000; }
   </style>
 </head>
 <body>
@@ -49,54 +100,42 @@
             <a class="nav-link" href="{% url 'home' %}">Home</a>
           </li>
 
-         <!-- Items Dropdown -->
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="itemsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Items
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="itemsDropdown" style="max-height: 300px; overflow-y: auto;">
+          <!-- Items Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="itemsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Items
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="itemsDropdown">
+              <!-- Lost Items -->
+              <li><h6 class="dropdown-header">Lost Items</h6></li>
+              {% for item in lost_items %}
+                <li><a class="dropdown-item" href="{% url 'item_detail' 'lost' item.id %}">{{ item.name }}</a></li>
+              {% empty %}
+                <li><span class="dropdown-item text-muted">No lost items</span></li>
+              {% endfor %}
 
-    <!-- Lost Items -->
-    <li><h6 class="dropdown-header">Lost Items</h6></li>
-    {% for item in lost_items %}
-      <li>
-        <a class="dropdown-item" href="{% url 'item_detail' 'lost' item.id %}">{{ item.name }}</a>
-      </li>
-    {% empty %}
-      <li><span class="dropdown-item text-muted">No lost items</span></li>
-    {% endfor %}
+              <li><hr class="dropdown-divider"></li>
 
-    <li><hr class="dropdown-divider"></li>
+              <!-- Found Items -->
+              <li><h6 class="dropdown-header">Found Items</h6></li>
+              {% for item in found_items %}
+                <li><a class="dropdown-item" href="{% url 'item_detail' 'found' item.id %}">{{ item.name }}</a></li>
+              {% empty %}
+                <li><span class="dropdown-item text-muted">No found items</span></li>
+              {% endfor %}
+            </ul>
+          </li>
 
-    <!-- Found Items -->
-    <li><h6 class="dropdown-header">Found Items</h6></li>
-    {% for item in found_items %}
-      <li>
-        <a class="dropdown-item" href="{% url 'item_detail' 'found' item.id %}">{{ item.name }}</a>
-      </li>
-    {% empty %}
-      <li><span class="dropdown-item text-muted">No found items</span></li>
-    {% endfor %}
-
-  </ul>
-</li>
-
-
-          <!-- Report Item (only for logged-in users) -->
           {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'report_item' %}">Report Item</a>
             </li>
           {% endif %}
 
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'about' %}">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
 
-          <!-- ✅ User dropdown with name -->
+          <!-- User Dropdown -->
           {% if user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -109,20 +148,13 @@
               </ul>
             </li>
           {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Sign Up</a></li>
           {% endif %}
-
         </ul>
       </div>
     </div>
   </nav>
-
-
   <!-- Navbar End -->
 
   <div class="container mt-5">
@@ -130,11 +162,20 @@
   </div>
 
   <!-- Footer -->
-  <footer class="bg-light text-center text-muted py-3 mt-5">
+  <footer>
     <div class="container">
       <p class="mb-1">&copy; 2025 Lost & Found. All Rights Reserved.</p>
-      <a href="{% url 'about' %}" class="mx-2">About</a> |
-      <a href="{% url 'contact' %}" class="mx-2">Contact</a>
+      <p>
+        <a href="{% url 'about' %}">About</a> |
+        <a href="{% url 'contact' %}">Contact</a>
+      </p>
+
+      <!-- ✅ Social Icons -->
+      <div class="social-icons mt-3">
+        <a href="https://facebook.com" target="_blank" class="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://linkedin.com" target="_blank" class="linkedin" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://x.com" target="_blank" class="x-twitter" aria-label="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+      </div>
     </div>
   </footer>
 

@@ -38,6 +38,12 @@
     margin-bottom: 15px;
   }
 
+  /* 🧭 Header spacing adjusted */
+  .header-section {
+    margin-top: 30px;   /* slightly higher (was default 5rem before via mt-5) */
+    margin-bottom: 20px; /* tighter gap with search bar */
+  }
+
   .recent-section {
     display: flex;
     justify-content: space-between;
@@ -45,8 +51,10 @@
     margin-bottom: 40px;
   }
 
+  /* ✅ Item card color same as Contact box */
   .item-card {
-    background-color: #e0f7fa;
+    background-color: #4db6ac;
+    color: #000;
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 10px;
@@ -75,7 +83,6 @@
     flex: 1 1 45%;
   }
 
-  /* ✨ Input and textarea background color */
   .form-control {
     background-color: #D9D9D9 !important;
     border: none;
@@ -91,35 +98,37 @@
   /* 🌿 Mission & Vision full-width box */
   .mission-vision-section {
     background-color: #22A2A9;
-    color: #fff;
+    color: #000;
     padding: 40px 0;
     width: 100%;
     border-radius: 10px;
+    margin-bottom: 40px;
   }
 
-  .mission-vision-section .container {
+  .mission-vision-section .mission-vision-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 30px;
-
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 20px;
   }
 
   .mission-vision-section h5 {
     font-weight: 700;
-    color: #fff;
+    color: #000;
     margin-bottom: 10px;
   }
 
   .mission-vision-section p {
-    color: #fff;
+    color: #000;
     margin-bottom: 12px;
   }
 
-  /* Quick Links and Policies styles */
   .mission-vision-section a {
-    color: #000000;
+    color: #000;
     text-decoration: none;
     font-weight: 500;
   }
@@ -128,11 +137,12 @@
     text-decoration: underline;
   }
 
+  /* 🌙 Footer styling */
   .bottom-footer {
     background-color: #006064;
     color: white;
     text-align: center;
-    padding: 10px 0;
+    padding: 20px 0;
     font-size: 14px;
     border-radius: 10px;
   }
@@ -142,15 +152,40 @@
     margin: auto;
     padding: 20px;
   }
+
+  .search-bar input.form-control {
+    border-radius: 25px;
+    padding: 10px 15px;
+  }
+
+  .search-bar .btn {
+    border-radius: 25px;
+  }
 </style>
 
-<div class="container mt-5">
+<div class="container">
 
   <!-- Header -->
-  <div class="text-center mb-5">
+  <div class="text-center header-section">
     <h1>Lost & Found Management System</h1>
     <p>Find what's lost, return what's found</p>
     <a href="{% url 'report_item' %}" class="btn btn-primary">Report Item</a>
+  </div>
+
+  <!-- 🔎 Search Bar -->
+  <div class="row justify-content-center mb-5 search-bar">
+    <div class="col-md-6">
+      <form method="get" action="{% url 'home' %}" class="d-flex">
+        <input
+          type="text"
+          name="q"
+          value="{{ query }}"
+          class="form-control me-2"
+          placeholder="Search items by title or location..."
+        >
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+    </div>
   </div>
 
   <!-- Recent Items -->
@@ -230,10 +265,10 @@
     </div>
   </div>
 </div>
+
 <!-- 🌿 Mission & Vision Section -->
 <div class="mission-vision-section">
-  <!-- inner container for content alignment -->
-  <div class="mission-vision-container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px; max-width:1100px; margin:auto; padding:0 20px;">
+  <div class="mission-vision-container">
     <div>
       <h5>MISSION</h5>
       <p>To create a trusted and efficient community-based solution where lost things find their way back.</p>
@@ -253,7 +288,7 @@
   </div>
 </div>
 
-
+<!-- 🌙 Footer -->
 <div class="bottom-footer">
   copyright @2025 | Lost & Found Management System
 </div>

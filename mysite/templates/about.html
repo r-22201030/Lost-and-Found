@@ -1,15 +1,65 @@
 {% extends "base.html" %}
-
 {% block title %}About{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-  <div class="card p-4 shadow-sm" style="width: 100%; max-width: 600px; border-radius: 15px;">
-    <h3 class="card-title text-center mb-4">About Us</h3>
-    <p class="text-center">
-      This is the About page of MySite. Here you can provide information about your website, mission, vision, or anything else you'd like your users to know.
+<style>
+  /* Import Inria Sans font */
+  @import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;400;700&display=swap');
+
+  body {
+    background-color: #f2f2f2;
+    font-family: 'Inria Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6, p, a, button {
+    font-family: 'Inria Sans', sans-serif !important;
+  }
+
+  .about-card {
+    background-color: #4db6ac;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 650px;
+    width: 100%;
+    text-align: center;
+    color: #000;
+  }
+
+  .about-card h3 {
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .about-card p {
+    font-size: 16px;
+    margin-bottom: 25px;
+    line-height: 1.6;
+  }
+
+  .btn-primary {
+    background-color: #00838f;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-weight: 600;
+  }
+
+  .btn-primary:hover {
+    background-color: #006064;
+  }
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="about-card">
+    <h3>About Us</h3>
+    <p>
+      Welcome to the Lost & Found Management System — a platform designed to help people reconnect with their lost belongings.
+      Our mission is to create a trustworthy and efficient community where lost items are easily reported, found, and returned to their rightful owners.
     </p>
-     <a href="{% url 'home' %}" class="btn btn-primary mt-3">Back to Home</a>
+    <a href="{% url 'home' %}" class="btn btn-primary mt-2">Back to Home</a>
   </div>
 </div>
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <style>
-  /* Import Inria Sans font */
   @import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;400;700&display=swap');
 
   body {
@@ -13,8 +13,9 @@
     padding: 0;
   }
 
-  h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, strong {
-    font-family: 'Inria Sans', sans-serif !important;
+  h1, h4 {
+    font-weight: 700;
+    color: #000;
   }
 
   .btn-primary {
@@ -29,19 +30,24 @@
     background-color: #006064;
   }
 
-  h1, h4 {
-    font-weight: 700;
-    color: #000;
+  .container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
   }
 
-  .section-title {
-    margin-bottom: 15px;
-  }
-
-  /* 🧭 Header spacing adjusted */
   .header-section {
-    margin-top: 30px;   /* slightly higher (was default 5rem before via mt-5) */
-    margin-bottom: 20px; /* tighter gap with search bar */
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+
+  .search-bar input.form-control {
+    border-radius: 25px;
+    padding: 10px 15px;
+  }
+
+  .search-bar .btn {
+    border-radius: 25px;
   }
 
   .recent-section {
@@ -51,13 +57,25 @@
     margin-bottom: 40px;
   }
 
-  /* ✅ Item card color same as Contact box */
+  /* ✅ Item card color same as contact box (#4db6ac) */
   .item-card {
     background-color: #4db6ac;
     color: #000;
     border-radius: 10px;
     padding: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .item-card img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    background: white;
+    border-radius: 8px;
+    padding: 5px;
   }
 
   .testimonial-box {
@@ -95,7 +113,6 @@
     box-shadow: 0 0 5px rgba(0, 131, 143, 0.5);
   }
 
-  /* 🌿 Mission & Vision full-width box */
   .mission-vision-section {
     background-color: #22A2A9;
     color: #000;
@@ -137,7 +154,6 @@
     text-decoration: underline;
   }
 
-  /* 🌙 Footer styling */
   .bottom-footer {
     background-color: #006064;
     color: white;
@@ -145,21 +161,6 @@
     padding: 20px 0;
     font-size: 14px;
     border-radius: 10px;
-  }
-
-  .container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
-  }
-
-  .search-bar input.form-control {
-    border-radius: 25px;
-    padding: 10px 15px;
-  }
-
-  .search-bar .btn {
-    border-radius: 25px;
   }
 </style>
 
@@ -172,7 +173,7 @@
     <a href="{% url 'report_item' %}" class="btn btn-primary">Report Item</a>
   </div>
 
-  <!-- 🔎 Search Bar -->
+  <!-- Search Bar -->
   <div class="row justify-content-center mb-5 search-bar">
     <div class="col-md-6">
       <form method="get" action="{% url 'home' %}" class="d-flex">
@@ -190,30 +191,50 @@
 
   <!-- Recent Items -->
   <div class="recent-section">
+    <!-- Lost Items -->
     <div class="col-md-6">
       <h4 class="section-title">Recent Lost Items</h4>
-      {% for item in lost_items %}
-        <div class="item-card">
-          <strong>{{ item.title }}</strong><br>
-          {{ item.description }}<br>
-          {{ item.date_lost }} - {{ item.location }}
+
+      <div class="item-card">
+        <img src="{% static 'images/ring.jpg' %}" alt="Lost ring">
+        <div>
+          <strong>Lost Ring</strong><br>
+          a gold ring <br>
+          Oct. 13, 2025 - UAP Canteen
         </div>
-      {% empty %}
-        <p>No lost items yet.</p>
-      {% endfor %}
+      </div>
+
+      <div class="item-card">
+        <img src="{% static 'images/umbrella.jpg' %}" alt="Lost umbrella">
+        <div>
+          <strong>Lost Umbrella</strong><br>
+          a purple color umbrella <br>
+          Oct. 13, 2025 - UAP Canteen
+        </div>
+      </div>
     </div>
 
+    <!-- Found Items -->
     <div class="col-md-6">
       <h4 class="section-title">Recent Found Items</h4>
-      {% for item in found_items %}
-        <div class="item-card">
-          <strong>{{ item.title }}</strong><br>
-          {{ item.description }}<br>
-          {{ item.date_found }} - {{ item.location }}
+
+      <div class="item-card">
+        <img src="{% static 'images/id.jpg' %}" alt="Found ID Card">
+        <div>
+          <strong>Found ID_Card</strong><br>
+          id ard-22201030 <br>
+          Oct. 14, 2025 - UAP Void
         </div>
-      {% empty %}
-        <p>No found items yet.</p>
-      {% endfor %}
+      </div>
+
+      <div class="item-card">
+        <img src="{% static 'images/wallet.jpg' %}" alt="Found Wallet">
+        <div>
+          <strong>Found Wallet</strong><br>
+          a black color wallet <br>
+          Oct. 13, 2025 - UAP Canteen
+        </div>
+      </div>
     </div>
   </div>
 
@@ -266,7 +287,7 @@
   </div>
 </div>
 
-<!-- 🌿 Mission & Vision Section -->
+<!-- Mission & Vision Section -->
 <div class="mission-vision-section">
   <div class="mission-vision-container">
     <div>
@@ -288,7 +309,7 @@
   </div>
 </div>
 
-<!-- 🌙 Footer -->
+<!-- Footer -->
 <div class="bottom-footer">
   copyright @2025 | Lost & Found Management System
 </div>
